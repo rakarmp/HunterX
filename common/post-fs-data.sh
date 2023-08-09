@@ -15,4 +15,4 @@ write /dev/cpuset/foreground/boost/cpus 4-7
 write /dev/cpuset/top-app/cpus 0-7
 
 # SELinux
-setenforce 0
+setenforce 1
