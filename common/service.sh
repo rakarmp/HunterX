@@ -143,7 +143,7 @@ echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 echo "16384,24576,32768,65536,131072,163840" > /sys/module/lowmemorykiller/parameters/minfree
 
 # ZRAM
-echo '1024' > /sys/block/zram0/queue/read_ahead_kb
+echo '2097152' > /sys/block/zram0/queue/read_ahead_kb
 
 # better idling
 echo 0-3 > /dev/cpuset/restricted/cpus
@@ -216,6 +216,76 @@ fi
 If [[ -d "/sys/touchpanel/double_tap" ]]
 then
   write "/sys/touchpanel/double_tap" 1
+fi
+
+# FSTRIM
+
+# Cek apakah file penanda sudah ada
+if [ ! -f /data/fstrim_done ]; then
+    # Jalankan perintah fstrim
+    fstrim -v /data
+
+    # Buat file penanda
+    touch /data/fstrim_done
+fi
+
+
+if [ ! -f /cache/fstrim_done ]; then
+    fstrim -v /cache
+
+    touch /cache/fstrim_done
+fi
+
+if [ ! -f /system/fstrim_done ]; then
+    fstrim -v /system
+
+    touch /system/fstrim_done
+fi
+
+if [ ! -f /vendor/fstrim_done ]; then
+    fstrim -v /vendor
+
+    touch /vendor/fstrim_done
+fi
+
+if [ ! -f /product/fstrim_done ]; then
+    fstrim -v /product
+
+    touch /product/fstrim_done
+fi
+
+
+# GED & PPM
+if [ -d "/sys/module/ged/parameters" ]; then
+echo 1 > /sys/module/ged/parameters/gx_game_mode
+echo 1 > /sys/module/ged/parameters/gx_force_cpu_boost
+echo 1 > /sys/module/ged/parameters/boost_amp
+echo 1 > /sys/module/ged/parameters/boost_extra
+echo 1 > /sys/module/ged/parameters/boost_gpu_enable
+echo 1 > /sys/module/ged/parameters/enable_cpu_boost
+echo 1 > /sys/module/ged/parameters/enable_gpu_boost
+echo 1 > /sys/module/ged/parameters/enable_game_self_frc_detect
+echo 10 > /sys/module/ged/parameters/gpu_idle
+echo 100 > /sys/module/ged/parameters/cpu_boost_policy
+echo 0 > /sys/module/ged/parameters/ged_force_mdp_enable
+echo 1 > /sys/module/ged/parameters/ged_boost_enable
+echo 100 > /sys/module/ged/parameters/ged_smart_boost
+echo 1 > /sys/module/ged/parameters/gx_frc_mode
+echo 1 > /sys/module/ged/parameters/gx_boost_on
+fi
+
+if [ -d "/proc/ppm" ]; then
+echo 1 > /proc/ppm/enabled
+echo 0 0 > /proc/ppm/policy_status
+echo 1 1 > /proc/ppm/policy_status
+echo 2 0 > /proc/ppm/policy_status
+echo 3 0 > /proc/ppm/policy_status
+echo 4 0 > /proc/ppm/policy_status
+echo 5 0 > /proc/ppm/policy_status
+echo 6 1 > /proc/ppm/policy_status
+echo 7 1 > /proc/ppm/policy_status
+echo 8 0 > /proc/ppm/policy_status
+echo 9 1 > /proc/ppm/policy_status
 fi
 
 # Google Services Drain fix
