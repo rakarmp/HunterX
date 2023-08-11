@@ -1,4 +1,4 @@
-<img src="HunterX.png" alt="HunterX"/>
+<img src="hunterx.png" alt="HunterX"/>
 <br />
 
 GET YOUR MAX PERFORMANCE STABILITY/BATTERY/GAMING
